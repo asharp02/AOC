@@ -1,14 +1,29 @@
 from typing import List
-    
+
 
 class ReflectorDish:
     dish = []
     total_load = 0
+
     def __init__(self, filename) -> None:
         self.dish = self.parse_input_file(filename)
-        for i in range(len(self.dish)):
-            for j in range(len(self.dish[i])):
-                self.move_north(i, j)
+        print(self.dish)
+        print("________________")
+        deltas_back = [(-1, 0), (0, -1)]
+        deltas_forward = [(1, 0), (0, 1)]
+        for delta_x, delta_y in deltas_back:
+            for i in range(len(self.dish)):
+                for j in range(len(self.dish[i])):
+                    self.roll(i, j, delta_x, delta_y)
+            print(self.dish)
+            print("______________________")
+        for delta_x, delta_y in deltas_forward:
+            for i in range(len(self.dish) - 1, 0, -1):
+                for j in range(len(self.dish[i]) - 1, 0, -1):
+                    self.roll(i, j, delta_x, delta_y)
+            print(self.dish)
+            print("______________________")
+
         self.total_load = self.calculate_load()
 
     @staticmethod
@@ -22,17 +37,27 @@ class ReflectorDish:
                         puzzle_row.append(char)
                 puzzle.append(puzzle_row)
         return puzzle
-    
-    def move_north(self, i, j):
-        if i < 1 or self.dish[i][j] != "O":
+
+    def roll(self, i, j, delta_i, delta_j):
+        row_inbounds = 0 <= i < len(self.dish)
+        col_inbounds = 0 <= j < len(self.dish[0])
+        if not row_inbounds or not col_inbounds or self.dish[i][j] != "O":
             return
-        if self.dish[i - 1][j] == ".":
+        new_row = i + delta_i
+        new_col = j + delta_j
+        delta_row_inbounds = 0 <= new_row < len(self.dish)
+        delta_col_inbounds = 0 <= new_col < len(self.dish[0])
+        if (
+            delta_row_inbounds
+            and delta_col_inbounds
+            and self.dish[new_row][new_col] == "."
+        ):
             # move up recursively
-            self.dish[i - 1][j] = "O"
+            self.dish[new_row][new_col] = "O"
             self.dish[i][j] = "."
-            self.move_north(i - 1, j)
+            self.roll(new_row, new_col, delta_i, delta_j)
         return
-    
+
     def calculate_load(self):
         level = len(self.dish)
         total_load = 0
@@ -44,12 +69,8 @@ class ReflectorDish:
         return total_load
 
 
-
-        
-
 r = ReflectorDish("test-input.txt")
-r2 = ReflectorDish("input.txt")
+# r2 = ReflectorDish("input.txt")
 print(r.dish)
 print(r.total_load)
-print(r2.total_load)
-
+# print(r2.total_load)
