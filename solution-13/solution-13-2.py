@@ -18,7 +18,7 @@ def part_1(data):
     for pattern in data:
         horizontal_line = check_horizontal(pattern)
         vertical_line = check_vertical(pattern)
-        total_sum += horizontal_line * 100 + vertical_line
+        total_sum += (horizontal_line * 100) + vertical_line
     return total_sum
 
 
