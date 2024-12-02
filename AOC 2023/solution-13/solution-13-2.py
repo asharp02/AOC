@@ -43,7 +43,21 @@ def is_reflection_line(pattern, row_a, row_b):
 
 
 def part_2(data):
-    pass
+    candidate = []
+    for pattern in data[:1]:
+        print(pattern)
+        for i in range(1, len(pattern)):
+            zipped = list(zip(pattern[i], pattern[i - 1]))
+            if check_smudge(zipped):
+                candidate.append(i)
+    print(candidate)
+
+
+def check_smudge(zipped):
+    # check whether two rows can be
+    # print(zipped)
+    # print(list(filter(lambda x: x[0] != x[1], zipped)))
+    return len(list(filter(lambda x: x[0] != x[1], zipped))) == 1
 
 
 if __name__ == "__main__":
@@ -51,4 +65,4 @@ if __name__ == "__main__":
     with open(INPUT_FILE, "r") as f:
         parsed_data = parse_file(f.read())
         print(part_1(parsed_data))
-        # part_2(parsed_data)
+        part_2(parsed_data)
